@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 firebase-debug.*.log*
+debug.log
 
 # Firebase cache
 .firebase/
@@ -47,6 +48,28 @@ build/Release
 # Dependency directories
 node_modules/
 
+# Cordova generated platforms and build outputs
+platforms/
+plugins/
+www/cordova.js
+www/cordova_plugins.js
+www/plugins/
+*.apk
+*.aab
+*.keystore
+*.jks
+*.idsig
+
+# Android and Gradle generated files
+.gradle/
+build/
+captures/
+local.properties
+gradle-app.setting
+platforms/android/.gradle/
+platforms/android/build/
+platforms/android/app/build/
+
 # Optional npm cache directory
 .npm
 
@@ -64,6 +87,45 @@ node_modules/
 
 # dotenv environment variables file
 .env
+.env.*
+!.env.example
 
 # dataconnect generated files
 .dataconnect
+
+# Editor and operating system files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local notes, prompts, scratch files and assistant/editor artifacts
+.codex/
+.agents/
+.cursor/
+.continue/
+.windsurf/
+*.prompt
+*.prompts
+*.chat
+*.transcript
+*.scratch
+scratch/
+notes.local*
+todo.local*
+codex-*
+ai-*
+assistant-*
+
+# Temporary and backup files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+*.swp
