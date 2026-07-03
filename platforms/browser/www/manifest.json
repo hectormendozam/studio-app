@@ -1,0 +1,11 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "Pixel Shot",
+  "short_name": "Pixel Shot",
+  "version": "com.pixelshot.shop",
+  "description": "Catalogo y tienda movil para estudio fotografico.",
+  "author": "Pixel Shot",
+  "icons": [],
+  "start_url": "index.html"
+}

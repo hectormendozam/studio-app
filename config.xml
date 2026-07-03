@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.pixelshot.shop" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Pixel Shot</name>
+  <description>Catalogo y tienda movil para estudio fotografico.</description>
+  <author email="contacto@example.com" href="https://example.com">Pixel Shot</author>
+
+  <content src="index.html" />
+
+  <access origin="https://*.googleapis.com" />
+  <access origin="https://*.firebaseio.com" />
+  <access origin="https://*.gstatic.com" />
+  <access origin="https://cdn.tailwindcss.com" />
+  <access origin="https://cdnjs.cloudflare.com" />
+  <access origin="https://images.unsplash.com" />
+
+  <allow-navigation href="https://*.googleapis.com/*" />
+  <allow-navigation href="https://*.firebaseio.com/*" />
+  <allow-navigation href="https://*.gstatic.com/*" />
+  <allow-navigation href="https://cdn.tailwindcss.com/*" />
+  <allow-navigation href="https://cdnjs.cloudflare.com/*" />
+  <allow-navigation href="https://images.unsplash.com/*" />
+
+  <allow-intent href="http://*/*" />
+  <allow-intent href="https://*/*" />
+</widget>

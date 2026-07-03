@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com https://firestore.googleapis.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.googleapis.com https://*.gstatic.com https://*.firebaseio.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; connect-src 'self' https://firestore.googleapis.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.googleapis.com https://*.gstatic.com https://*.firebaseio.com wss://*.firebaseio.com; img-src 'self' data: https:; font-src 'self' data: https://cdnjs.cloudflare.com;">
+  <title>Pixel Shot</title>
+
+  <!-- Tailwind CSS por CDN, tal como solicita la rubrica del proyecto. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            crema: '#FFFAF1',
+            tierra: '#7A6E5D',
+            cafe: '#4A3F35',
+            oliva: '#6F725D',
+            vino: '#7B4F4F'
+          },
+          boxShadow: {
+            soft: '0 8px 24px rgba(74, 63, 53, 0.08)'
+          },
+          fontFamily: {
+            display: ['Georgia', 'Cambria', 'serif'],
+            body: ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Iconos ligeros mediante CDN. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    body {
+      background: #FFFAF1;
+      color: #4A3F35;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      height: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    #app {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: visible;
+    }
+
+    #app > main {
+      min-height: calc(100vh - 76px);
+      overflow: visible;
+      padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+      overscroll-behavior-y: contain;
+      scroll-behavior: smooth;
+    }
+
+    html.cordova-webview,
+    body.cordova-webview {
+      height: 100%;
+      overflow-y: hidden;
+    }
+
+    body.cordova-webview {
+      overflow: hidden;
+      touch-action: auto;
+    }
+
+    body.cordova-webview #app {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      width: 100%;
+      max-width: 28rem;
+      height: 100vh;
+      height: 100dvh;
+      margin: 0 auto;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    body.cordova-webview #app > main {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+
+    button,
+    [type="button"],
+    [type="submit"],
+    .nav-btn,
+    .menu-link {
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid rgba(122, 110, 93, 0.28);
+      outline-offset: 2px;
+    }
+
+    .screen {
+      min-height: calc(100vh - 76px);
+      padding-bottom: calc(10rem + env(safe-area-inset-bottom));
+    }
+
+    body.cordova-webview .screen {
+      min-height: 100%;
+      padding-bottom: calc(11rem + env(safe-area-inset-bottom));
+    }
+
+    .screen::after {
+      display: block;
+      height: calc(5rem + env(safe-area-inset-bottom));
+      content: "";
+    }
+
+    .safe-bottom {
+      padding-bottom: calc(0.9rem + env(safe-area-inset-bottom));
+    }
+
+    .photo-surface {
+      background-image:
+        radial-gradient(circle at top left, rgba(122, 110, 93, 0.10), transparent 30%),
+        linear-gradient(180deg, rgba(255, 250, 241, 0.95), rgba(255, 250, 241, 1));
+    }
+
+    .auth-screen {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background:
+        linear-gradient(135deg, rgba(74, 63, 53, 0.96) 0 48%, rgba(122, 110, 93, 0.92) 48% 51%, #FFFAF1 51% 100%);
+    }
+
+    .auth-screen.screen {
+      padding-bottom: 0;
+    }
+
+    .auth-screen.screen::after {
+      display: none;
+    }
+
+    .auth-screen::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 250, 241, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 82%, rgba(74, 63, 53, 0.10), transparent 32%);
+      pointer-events: none;
+    }
+
+    .auth-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 100%;
+      max-width: 24rem;
+      min-height: inherit;
+      margin: 0 auto;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .auth-title {
+      color: #FFFAF1;
+      text-align: center;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    .auth-subtitle {
+      margin-top: 0.35rem;
+      color: rgba(255, 250, 241, 0.78);
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .auth-tabs {
+      margin-top: 1.6rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 250, 241, 0.42);
+      background: rgba(74, 63, 53, 0.68);
+      padding: 0.25rem;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 14px 30px rgba(74, 63, 53, 0.22);
+    }
+
+    .auth-tabs button {
+      min-width: 0;
+      border-radius: 999px;
+      overflow: hidden;
+      padding-right: 0.55rem;
+      padding-left: 0.55rem;
+      white-space: nowrap;
+      font-size: 0.78rem;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .auth-form {
+      margin-top: 1.35rem;
+    }
+
+    .auth-field {
+      position: relative;
+      display: flex;
+      min-height: 3.85rem;
+      align-items: center;
+      border-radius: 999px;
+      background: rgba(255, 250, 241, 0.9);
+      box-shadow: 0 16px 35px rgba(74, 63, 53, 0.18);
+    }
+
+    .auth-icon {
+      display: grid;
+      width: 3.85rem;
+      height: 3.85rem;
+      flex: none;
+      place-items: center;
+      border-radius: 999px;
+      background: #FFFAF1;
+      color: #4A3F35;
+      box-shadow: 0 10px 24px rgba(74, 63, 53, 0.22);
+    }
+
+    .auth-input {
+      min-width: 0;
+      flex: 1;
+      border: 0;
+      background: transparent;
+      padding: 0 1.25rem 0 0.85rem;
+      color: #4A3F35;
+      outline: none;
+      font-weight: 700;
+    }
+
+    .auth-input::placeholder {
+      color: rgba(74, 63, 53, 0.62);
+    }
+
+    .auth-submit {
+      min-height: 3.55rem;
+      border-radius: 999px;
+      background: #FFFAF1;
+      color: #4A3F35;
+      box-shadow: 0 16px 35px rgba(74, 63, 53, 0.18);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 360px) {
+      .auth-tabs button {
+        font-size: 0.72rem;
+      }
+
+      .auth-content {
+        padding-right: 0.85rem;
+        padding-left: 0.85rem;
+      }
+    }
+
+    .fade-in {
+      animation: screenEnter 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .slide-in {
+      animation: slideIn 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .progress-bar {
+      height: 0.45rem;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #eadfcd;
+    }
+
+    .progress-bar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #7A6E5D;
+      transition: width 220ms ease;
+    }
+
+    .tap-scale {
+      transition: transform 140ms ease, opacity 140ms ease, background-color 140ms ease;
+    }
+
+    .tap-scale:active {
+      transform: scale(0.97);
+    }
+
+    .nav-btn {
+      transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+    }
+
+    .nav-btn i {
+      transition: transform 180ms ease;
+    }
+
+    .nav-btn.bg-crema {
+      transform: translateY(-2px);
+    }
+
+    .nav-btn.bg-crema i {
+      transform: translateY(-1px) scale(1.08);
+    }
+
+    .menu-link {
+      transition: background-color 160ms ease, transform 160ms ease;
+    }
+
+    .menu-link:active {
+      transform: translateX(3px);
+    }
+
+    #menu-panel:not(.hidden) {
+      animation: menuDrop 180ms ease-out both;
+      transform-origin: top center;
+    }
+
+    #toast:not(.hidden) {
+      animation: toastIn 220ms ease-out both;
+    }
+
+    .animated-card {
+      animation: cardIn 260ms ease-out both;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .animated-card:active {
+      transform: scale(0.985);
+    }
+
+    .cart-pop {
+      animation: cartPop 240ms ease-out both;
+    }
+
+    .skeleton {
+      position: relative;
+      overflow: hidden;
+      background: #eadfcd;
+    }
+
+    .skeleton::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes screenEnter {
+      from { opacity: 0; transform: translateY(10px) scale(0.995); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(18px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes menuDrop {
+      from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translate(-50%, -10px) scale(0.98); }
+      to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes cartPop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shimmer {
+      100% { transform: translateX(100%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="font-body antialiased">
+  <!-- Cordova inyecta este archivo al compilar. En navegador web puede aparecer como 404 sin afectar la app. -->
+  <script src="cordova.js"></script>
+
+  <div id="app" class="mx-auto min-h-screen max-w-md bg-crema shadow-soft">
+    <header id="app-header" class="sticky top-0 z-30 border-b border-[#eadfcd] bg-crema/95 px-4 py-3 backdrop-blur">
+      <div class="flex items-center justify-between gap-3">
+        <button id="btn-menu" class="tap-scale grid h-11 w-11 place-items-center rounded-full border border-[#dfd1bd] bg-white text-tierra shadow-sm" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-panel">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <button id="btn-home-logo" class="flex flex-1 items-center gap-3 text-left" type="button" aria-label="Ir al catalogo">
+          <span class="grid h-11 w-11 place-items-center rounded-full bg-tierra text-white shadow-sm">
+            <i class="fa-solid fa-camera-retro text-lg"></i>
+          </span>
+          <span>
+            <span class="block font-display text-xl leading-tight text-cafe">Pixel Shot</span>
+            <span class="block text-xs font-medium uppercase text-tierra">Studio Shop</span>
+          </span>
+        </button>
+      </div>
+      <div id="menu-panel" class="mt-3 hidden rounded-lg border border-[#eadfcd] bg-white p-2 shadow-sm" role="menu" aria-label="Menu principal">
+        <button data-menu-nav="pantalla-catalogo" class="menu-link flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-cafe" type="button">
+          <i class="fa-solid fa-house w-5 text-tierra"></i>Catalogo
+        </button>
+        <button data-menu-nav="pantalla-info" class="menu-link flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-cafe" type="button">
+          <i class="fa-solid fa-circle-info w-5 text-tierra"></i>Informacion
+        </button>
+        <button data-menu-nav="pantalla-registro" class="menu-link flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-cafe" type="button">
+          <i class="fa-solid fa-user-plus w-5 text-tierra"></i>Cuenta
+        </button>
+        <button data-menu-nav="pantalla-carrito" class="menu-link flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-cafe" type="button">
+          <i class="fa-solid fa-bag-shopping w-5 text-tierra"></i>Carrito
+        </button>
+      </div>
+    </header>
+
+    <main class="photo-surface">
+      <!-- Pantalla 0: Inicio de sesion -->
+      <section id="pantalla-login" class="auth-screen screen">
+        <div class="auth-content">
+          <div>
+            <h1 class="auth-title">Pixel Shot</h1>
+            <p class="auth-subtitle">Studio Shop</p>
+          </div>
+
+          <div id="cuenta-auth-panel">
+            <div class="auth-tabs">
+              <button id="btn-modo-login" class="bg-crema px-3 py-2 text-sm font-black uppercase text-cafe shadow-sm" type="button">
+                Iniciar sesion
+              </button>
+              <button id="btn-modo-registro" class="px-3 py-2 text-sm font-black uppercase text-crema" type="button">
+                Crear cuenta
+              </button>
+            </div>
+
+            <form id="form-login-cliente" class="auth-form space-y-5">
+              <label class="auth-field">
+                <span class="auth-icon"><i class="fa-regular fa-user text-2xl"></i></span>
+                <input id="login-email" class="auth-input" type="email" autocomplete="email" maxlength="120" placeholder="Correo electronico" required>
+              </label>
+              <label class="auth-field">
+                <span class="auth-icon"><i class="fa-solid fa-lock text-2xl"></i></span>
+                <input id="login-password" class="auth-input" type="password" autocomplete="current-password" minlength="6" maxlength="64" placeholder="Contrasena" required>
+              </label>
+              <button class="auth-submit w-full px-4 py-3 text-sm" type="submit">
+                Iniciar sesion
+              </button>
+            </form>
+
+            <form id="form-registro-cliente" class="auth-form hidden space-y-4">
+              <label class="auth-field">
+                <span class="auth-icon"><i class="fa-regular fa-user text-2xl"></i></span>
+                <input id="registro-nombre" class="auth-input" type="text" autocomplete="name" minlength="3" maxlength="80" placeholder="Nombre completo" required>
+              </label>
+              <label class="auth-field">
+                <span class="auth-icon"><i class="fa-regular fa-envelope text-2xl"></i></span>
+                <input id="registro-email" class="auth-input" type="email" autocomplete="email" maxlength="120" placeholder="Correo electronico" required>
+              </label>
+              <label class="auth-field">
+                <span class="auth-icon"><i class="fa-solid fa-phone text-xl"></i></span>
+                <input id="registro-telefono" class="auth-input" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9]{10}" maxlength="10" placeholder="Telefono, 10 digitos" required>
+              </label>
+              <label class="auth-field">
+                <span class="auth-icon"><i class="fa-solid fa-lock text-2xl"></i></span>
+                <input id="registro-password" class="auth-input" type="password" autocomplete="new-password" minlength="6" maxlength="64" placeholder="Contrasena" required>
+              </label>
+              <button class="auth-submit w-full px-4 py-3 text-sm" type="submit">
+                Crear cuenta
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pantalla 1: Catalogo de Productos -->
+      <section id="pantalla-catalogo" class="screen hidden px-4 py-5">
+        <div class="mb-5">
+          <p class="text-sm font-semibold uppercase text-tierra">Catalogo premium</p>
+          <h1 class="mt-1 font-display text-3xl leading-tight text-cafe">Productos y sesiones para conservar tus mejores instantes.</h1>
+        </div>
+
+        <div class="mb-4 flex items-center justify-between gap-3">
+          <p id="catalogo-estado" class="text-sm text-cafe/75">Cargando productos...</p>
+          <button id="btn-refrescar-productos" class="rounded-full border border-[#dfd1bd] bg-white px-3 py-2 text-xs font-semibold text-tierra shadow-sm" type="button">
+            <i class="fa-solid fa-rotate-right mr-1"></i>Actualizar
+          </button>
+        </div>
+
+        <label class="mb-4 flex items-center gap-3 rounded-lg border border-[#dfd1bd] bg-white px-3 py-2 shadow-sm">
+          <i class="fa-solid fa-magnifying-glass text-tierra"></i>
+          <input id="catalogo-busqueda" class="min-w-0 flex-1 bg-transparent py-2 text-sm text-cafe outline-none placeholder:text-cafe/45" type="search" autocomplete="off" placeholder="Buscar por nombre, categoria o descripcion">
+          <button id="btn-limpiar-busqueda" class="grid h-9 w-9 place-items-center rounded-full text-cafe/60 hidden" type="button" aria-label="Limpiar busqueda">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </label>
+
+        <div id="catalogo-loading" class="grid grid-cols-2 gap-3">
+          <div class="rounded-lg bg-white p-2 shadow-sm">
+            <div class="skeleton aspect-[4/3] rounded-lg"></div>
+            <div class="skeleton mt-3 h-4 rounded"></div>
+            <div class="skeleton mt-2 h-4 w-2/3 rounded"></div>
+          </div>
+          <div class="rounded-lg bg-white p-2 shadow-sm">
+            <div class="skeleton aspect-[4/3] rounded-lg"></div>
+            <div class="skeleton mt-3 h-4 rounded"></div>
+            <div class="skeleton mt-2 h-4 w-2/3 rounded"></div>
+          </div>
+        </div>
+        <div id="productos-grid" class="grid grid-cols-2 gap-3"></div>
+      </section>
+
+      <!-- Pantalla 2: Detalle del Producto -->
+      <section id="pantalla-detalle" class="screen hidden">
+        <div class="relative">
+          <img id="detalle-imagen" class="h-72 w-full object-cover" alt="Imagen del producto seleccionado">
+          <button id="btn-volver-detalle" class="absolute left-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-white/95 text-cafe shadow-sm" type="button" aria-label="Volver al catalogo">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <span id="detalle-categoria" class="absolute bottom-4 left-4 rounded-full bg-white px-3 py-1 text-xs font-bold uppercase text-tierra shadow-sm"></span>
+        </div>
+
+        <div class="px-4 py-5">
+          <h2 id="detalle-titulo" class="font-display text-3xl leading-tight text-cafe"></h2>
+          <div class="mt-2 flex items-center gap-2 text-sm text-[#B88746]">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+            <span class="font-semibold text-cafe/70">4.8 experiencia studio</span>
+          </div>
+          <p id="detalle-descripcion" class="mt-4 text-sm leading-6 text-cafe/80"></p>
+          <p id="detalle-precio" class="mt-4 text-2xl font-bold text-cafe"></p>
+          <p id="detalle-stock" class="mt-1 text-sm font-medium text-oliva"></p>
+
+          <form id="form-agregar-carrito" class="mt-6 space-y-4 rounded-lg bg-white p-4 shadow-sm">
+            <label class="block">
+              <span class="text-sm font-semibold text-cafe">Tamano o variante</span>
+              <select id="detalle-variante" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" required></select>
+            </label>
+
+            <label class="block">
+              <span class="text-sm font-semibold text-cafe">Cantidad</span>
+              <input id="detalle-cantidad" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="number" inputmode="numeric" min="1" step="1" value="1" required>
+            </label>
+
+            <button class="w-full rounded-lg bg-tierra px-4 py-3 font-bold text-white shadow-sm active:scale-[0.99]" type="submit">
+              <i class="fa-solid fa-cart-plus mr-2"></i>Anadir al carrito
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Pantalla 3: Carrito de Compras -->
+      <section id="pantalla-carrito" class="screen hidden px-4 py-5">
+        <div class="mb-5 flex items-center gap-3">
+          <button id="btn-volver-carrito" class="grid h-10 w-10 place-items-center rounded-full bg-white text-cafe shadow-sm" type="button" aria-label="Volver">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <div>
+            <p class="text-sm font-semibold uppercase text-tierra">Carrito</p>
+            <h2 class="font-display text-3xl leading-tight text-cafe">Tu pedido</h2>
+          </div>
+        </div>
+
+        <ul id="carrito-lista" class="space-y-3"></ul>
+
+        <div id="carrito-vacio" class="rounded-lg bg-white p-6 text-center shadow-sm">
+          <i class="fa-solid fa-bag-shopping text-3xl text-tierra"></i>
+          <p class="mt-3 font-semibold text-cafe">Aun no tienes productos en el carrito.</p>
+          <button id="btn-ir-catalogo-vacio" class="mt-4 rounded-lg bg-tierra px-4 py-3 text-sm font-bold text-white" type="button">Ver catalogo</button>
+        </div>
+
+        <div class="mt-5 rounded-lg bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-semibold text-cafe/70">Total a pagar</span>
+            <strong id="carrito-total" class="text-2xl text-cafe">$0.00</strong>
+          </div>
+          <div class="progress-bar mt-3"><span id="carrito-progreso" style="width: 0%"></span></div>
+          <button id="btn-proceder-pago" class="mt-4 w-full rounded-lg bg-tierra px-4 py-3 font-bold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-50" type="button">
+            Proceder al pago
+          </button>
+        </div>
+      </section>
+
+      <!-- Pantalla 4: Formulario de Pedido -->
+      <section id="pantalla-pedido" class="screen hidden px-4 py-5">
+        <div class="mb-5 flex items-center gap-3">
+          <button id="btn-volver-pedido" class="grid h-10 w-10 place-items-center rounded-full bg-white text-cafe shadow-sm" type="button" aria-label="Volver al carrito">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <div>
+            <p class="text-sm font-semibold uppercase text-tierra">Confirmacion</p>
+            <h2 class="font-display text-3xl leading-tight text-cafe">Datos de entrega</h2>
+          </div>
+        </div>
+
+        <form id="form-pedido" class="space-y-4 rounded-lg bg-white p-4 shadow-sm">
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Nombre completo</span>
+            <input id="cliente-nombre" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="text" autocomplete="name" minlength="3" maxlength="80" required>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Correo electronico</span>
+            <input id="cliente-email" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="email" autocomplete="email" maxlength="120" required>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Direccion de envio</span>
+            <input id="cliente-direccion" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="text" autocomplete="street-address" minlength="8" maxlength="160" required>
+          </label>
+
+          <fieldset class="rounded-lg border border-[#dfd1bd] p-3">
+            <legend class="px-1 text-sm font-semibold text-cafe">Metodo de entrega</legend>
+            <label class="mt-2 flex items-center gap-3 text-sm text-cafe">
+              <input class="h-4 w-4 accent-[#7A6E5D]" type="radio" name="metodoEntrega" value="Envio a Domicilio" required checked>
+              Envio a Domicilio
+            </label>
+            <label class="mt-3 flex items-center gap-3 text-sm text-cafe">
+              <input class="h-4 w-4 accent-[#7A6E5D]" type="radio" name="metodoEntrega" value="Recoger en Estudio Fotografico" required>
+              Recoger en Estudio Fotografico
+            </label>
+          </fieldset>
+
+          <label class="flex items-start gap-3 rounded-lg bg-crema p-3 text-sm text-cafe">
+            <input id="aceptar-terminos" class="mt-1 h-4 w-4 accent-[#7A6E5D]" type="checkbox" required>
+            <span>Aceptar terminos y politicas de entrega.</span>
+          </label>
+
+          <div class="rounded-lg bg-crema p-3">
+            <div class="flex items-center justify-between text-sm">
+              <span class="font-semibold text-cafe/70">Total del pedido</span>
+              <strong id="pedido-total" class="text-xl text-cafe">$0.00</strong>
+            </div>
+          </div>
+
+          <button id="btn-confirmar-pedido" class="w-full rounded-lg bg-tierra px-4 py-3 font-bold text-white shadow-sm" type="submit">
+            <i class="fa-solid fa-receipt mr-2"></i>Confirmar Pedido
+          </button>
+        </form>
+      </section>
+
+      <!-- Pantalla 5: Informacion del negocio -->
+      <section id="pantalla-info" class="screen hidden px-4 py-5">
+        <div class="mb-5">
+          <p class="text-sm font-semibold uppercase text-tierra">Pixel Shot</p>
+          <h2 class="mt-1 font-display text-3xl leading-tight text-cafe">Estudio fotografico para sesiones, productos e impresiones.</h2>
+        </div>
+
+        <div class="overflow-hidden rounded-lg bg-white shadow-sm">
+          <div class="relative">
+            <img id="carousel-imagen" class="h-64 w-full object-cover slide-in" src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80" alt="Foto del estudio">
+            <button id="btn-carousel-prev" class="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/95 text-cafe shadow-sm" type="button" aria-label="Foto anterior">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button id="btn-carousel-next" class="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/95 text-cafe shadow-sm" type="button" aria-label="Foto siguiente">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="p-4">
+            <div class="mb-3 flex items-center justify-between gap-3">
+              <h3 id="carousel-titulo" class="font-display text-2xl text-cafe">Set principal</h3>
+              <span id="carousel-contador" class="text-xs font-bold uppercase text-tierra">1 / 3</span>
+            </div>
+            <p id="carousel-descripcion" class="text-sm leading-6 text-cafe/75">Area de retrato con iluminacion continua y fondos editoriales.</p>
+            <div class="progress-bar mt-4"><span id="carousel-progreso" style="width: 33%"></span></div>
+          </div>
+        </div>
+
+        <div class="mt-5 grid grid-cols-3 gap-3">
+          <div class="rounded-lg bg-white p-3 text-center shadow-sm">
+            <p class="text-2xl font-bold text-cafe">8+</p>
+            <p class="text-xs font-semibold uppercase text-tierra">Sets</p>
+          </div>
+          <div class="rounded-lg bg-white p-3 text-center shadow-sm">
+            <p class="text-2xl font-bold text-cafe">4.8</p>
+            <p class="text-xs font-semibold uppercase text-tierra">Rating</p>
+          </div>
+          <div class="rounded-lg bg-white p-3 text-center shadow-sm">
+            <p class="text-2xl font-bold text-cafe">24h</p>
+            <p class="text-xs font-semibold uppercase text-tierra">Entrega</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pantalla 6: Cuenta del cliente -->
+      <section id="pantalla-registro" class="screen hidden px-4 py-5">
+        <div class="mb-5 flex items-center gap-3">
+          <div>
+            <p class="text-sm font-semibold uppercase text-tierra">Cuenta</p>
+            <h2 class="font-display text-3xl leading-tight text-cafe">Tu cuenta</h2>
+          </div>
+        </div>
+
+        <div id="cliente-sesion" class="mb-4 hidden rounded-lg bg-white p-4 shadow-sm">
+          <p class="text-sm font-semibold text-cafe">Sesion activa</p>
+          <p id="cliente-sesion-email" class="mt-1 break-words text-sm text-cafe/70"></p>
+          <button id="btn-cliente-logout" class="mt-4 w-full rounded-lg border border-[#dfd1bd] bg-white px-4 py-3 text-sm font-bold text-tierra shadow-sm" type="button">Cerrar sesion</button>
+        </div>
+      </section>
+
+      <!-- Pantalla 8: Panel de Administracion -->
+      <section id="pantalla-admin" class="screen hidden px-4 py-5">
+        <div class="mb-5 flex items-center gap-3">
+          <button id="btn-volver-admin" class="grid h-10 w-10 place-items-center rounded-full bg-white text-cafe shadow-sm" type="button" aria-label="Volver al catalogo">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <div>
+            <p class="text-sm font-semibold uppercase text-tierra">Administracion</p>
+            <h2 class="font-display text-3xl leading-tight text-cafe">Inventario</h2>
+          </div>
+        </div>
+
+        <div class="mb-4 rounded-lg border border-[#dfd1bd] bg-white p-3 text-sm text-cafe/75 shadow-sm">
+          <i class="fa-solid fa-lock mr-2 text-tierra"></i>
+          Solo personal autorizado del estudio puede editar el inventario.
+        </div>
+
+        <form id="form-admin-producto" class="space-y-3 rounded-lg bg-white p-4 shadow-sm">
+          <input id="admin-producto-id" type="hidden">
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Nombre</span>
+            <input id="admin-nombre" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="text" minlength="3" maxlength="80" required>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Precio</span>
+            <input id="admin-precio" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="number" inputmode="decimal" min="0.01" step="0.01" required>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Categoria</span>
+            <input id="admin-categoria" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="text" minlength="3" maxlength="60" required>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Descripcion</span>
+            <textarea id="admin-descripcion" class="mt-2 min-h-24 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" minlength="10" maxlength="300" required></textarea>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">URL de la imagen</span>
+            <input id="admin-imagen" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="url" inputmode="url" placeholder="https://..." pattern="https://.*" required>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-semibold text-cafe">Stock</span>
+            <input id="admin-stock" class="mt-2 w-full rounded-lg border border-[#dfd1bd] bg-crema px-3 py-3 text-sm text-cafe outline-none focus:border-tierra" type="number" inputmode="numeric" min="0" step="1" required>
+          </label>
+
+          <div class="grid grid-cols-2 gap-3">
+            <button id="btn-guardar-producto" class="rounded-lg bg-tierra px-4 py-3 text-sm font-bold text-white shadow-sm" type="submit">
+              Guardar
+            </button>
+            <button id="btn-limpiar-admin" class="rounded-lg border border-[#dfd1bd] bg-white px-4 py-3 text-sm font-bold text-tierra shadow-sm" type="button">
+              Limpiar
+            </button>
+          </div>
+        </form>
+
+        <div class="mt-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h3 class="font-display text-2xl text-cafe">Productos actuales</h3>
+            <span id="admin-estado" class="text-xs font-semibold uppercase text-tierra">Sincronizando</span>
+          </div>
+          <div id="admin-lista" class="space-y-3"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FAB de carrito con contador en tiempo real. -->
+    <button id="fab-carrito" class="fixed bottom-20 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-tierra text-white shadow-soft active:scale-95" type="button" aria-label="Abrir carrito">
+      <i class="fa-solid fa-cart-shopping text-lg"></i>
+      <span id="contador-carrito" class="absolute -right-1 -top-1 grid h-6 min-w-6 place-items-center rounded-full bg-vino px-1 text-xs font-bold text-white">0</span>
+    </button>
+
+    <nav id="bottom-nav" class="safe-bottom fixed bottom-0 left-1/2 z-30 grid w-full max-w-md -translate-x-1/2 grid-cols-4 border-t border-[#eadfcd] bg-white px-2 pt-2 shadow-soft">
+      <button data-nav="pantalla-catalogo" class="nav-btn flex flex-col items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-tierra" type="button">
+        <i class="fa-solid fa-house text-base"></i>
+        Inicio
+      </button>
+      <button data-nav="pantalla-carrito" class="nav-btn flex flex-col items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-cafe/60" type="button">
+        <i class="fa-solid fa-bag-shopping text-base"></i>
+        Carrito
+      </button>
+      <button data-nav="pantalla-info" class="nav-btn flex flex-col items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-cafe/60" type="button">
+        <i class="fa-solid fa-circle-info text-base"></i>
+        Info
+      </button>
+      <button data-nav="pantalla-registro" class="nav-btn flex flex-col items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-cafe/60" type="button">
+        <i class="fa-solid fa-user-plus text-base"></i>
+        Cuenta
+      </button>
+      <button id="nav-inventario" data-nav="pantalla-admin" class="nav-btn hidden flex flex-col items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-cafe/60" type="button">
+        <i class="fa-solid fa-boxes-stacked text-base"></i>
+        Inventario
+      </button>
+    </nav>
+
+    <div id="toast" class="pointer-events-none fixed left-1/2 top-20 z-50 hidden w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-lg bg-cafe px-4 py-3 text-sm font-semibold text-white shadow-soft"></div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
